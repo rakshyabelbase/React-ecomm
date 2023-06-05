@@ -3,35 +3,35 @@ import Jumbotron from "../../components/cards/Jumbotron";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   //State
-  const [name, setName] = useState("Ranju");
-  const [email, setEmail] = useState("daka@gmail.com");
-  const [password, setPassword] = useState("daka123");
+  const [name, setName] = useState("Raks3");
+  const [email, setEmail] = useState("raks3@test.com");
+  const [password, setPassword] = useState("rrrr123");
   //hooks
   const [auth, setAuth] = useAuth();
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_API}/register`,
-        {
-          name,
-          email,
-          password,
-        }
-      );
+      const { data } = await axios.post(`/register`, {
+        name,
+        email,
+        password,
+      });
       console.log(data);
       if (data?.error) {
         toast.error(data.error);
       } else {
-        setAuth({...auth,token:data.token,user:data.user});
+        localStorage.setItem("auth", JSON.stringify(data));
+
+        setAuth({ ...auth, token: data.token, user: data.user });
 
         toast.success("Registration is sucessful");
+        navigate("/dashboard");
       }
     } catch (err) {
       console.log(err);
