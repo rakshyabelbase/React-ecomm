@@ -9,7 +9,7 @@ export default function Register() {
   //State
   const [name, setName] = useState("Raks3");
   const [email, setEmail] = useState("raks3@test.com");
-  const [password, setPassword] = useState("rrrr123");
+  const [password, setPassword] = useState("rrrrrr");
   //hooks
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
