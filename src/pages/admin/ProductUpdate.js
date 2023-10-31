@@ -4,12 +4,12 @@ import { useAuth } from "../../context/auth";
 import Jumbotron from "../../components/cards/Jumbotron";
 import axios from "axios";
 import { Select } from "antd";
-import toast from 'react-hot-toast';
-import {useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
+import { useNavigate,useParams } from "react-router-dom";
 
 const { Option } = Select;
 
-export default function AdminProduct() {
+export default function AdminProductUpdate() {
   //context
   const [auth, setAuth] = useAuth();
   //State
@@ -21,9 +21,15 @@ export default function AdminProduct() {
   const [category, setCategory] = useState("");
   const [shipping, setShipping] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [id, setId] = useState("");
 
-   //hook
-    const navigate = useNavigate();
+  //hook
+  const navigate = useNavigate();
+  const params= useParams();
+
+  useEffect(()=>{
+    loadProduct();
+  }, [])
 
   useEffect(() => {
     loadCategories();
@@ -38,26 +44,41 @@ export default function AdminProduct() {
     }
   };
 
+  const loadProduct = async () =>{
+    try{
+   const {data} = await axios.get(`/product/${params.slug}`);
+    setName(data.name);
+    setDescription(data.description);
+    setPrice(data.price);
+    setCategory(data.category._id);
+    setShipping(data.shipping);
+    setQuantity(data.quantity);
+    setId(data._id);
+    }catch(err){
+        console.log(err);
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const productData = new FormData();
-      productData.append('photo',photo);
-      productData.append('name',name);
-      productData.append('description',description);
-      productData.append('price',price);
-      productData.append('category',category);
-      productData.append('shipping',shipping);
-      productData.append('quantity',quantity);
+      productData.append("photo", photo);
+      productData.append("name", name);
+      productData.append("description", description);
+      productData.append("price", price);
+      productData.append("category", category);
+      productData.append("shipping", shipping);
+      productData.append("quantity", quantity);
 
-     // console.log([...productData]);
-     const{data} = await axios.post('/product',productData);
-     if(data?.error){
-      toast.error(data.error)
-     }else{
-      toast.success(`${data.name} is created`);
-     navigate('dashboard/admin/products');
-     }
+      // console.log([...productData]);
+      const { data } = await axios.post("/product", productData);
+      if (data?.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(`${data.name} is created`);
+        navigate("dashboard/admin/products");
+      }
     } catch (err) {
       console.log(err);
       toast.error("Product create failed.try again!!!");
@@ -76,7 +97,7 @@ export default function AdminProduct() {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <div className="p-3 mt-2 mb-2 h4 bg-light">Create Product </div>
+            <div className="p-3 mt-2 mb-2 h4 bg-light">Update Product </div>
 
             {photo && (
               <div className="text-center">
