@@ -5,7 +5,7 @@ import Jumbotron from "../../components/cards/Jumbotron";
 import axios from "axios";
 import { Select } from "antd";
 import toast from "react-hot-toast";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -25,11 +25,11 @@ export default function AdminProductUpdate() {
 
   //hook
   const navigate = useNavigate();
-  const params= useParams();
+  const params = useParams();
 
-  useEffect(()=>{
+  useEffect(() => {
     loadProduct();
-  }, [])
+  }, []);
 
   useEffect(() => {
     loadCategories();
@@ -44,26 +44,26 @@ export default function AdminProductUpdate() {
     }
   };
 
-  const loadProduct = async () =>{
-    try{
-   const {data} = await axios.get(`/product/${params.slug}`);
-    setName(data.name);
-    setDescription(data.description);
-    setPrice(data.price);
-    setCategory(data.category._id);
-    setShipping(data.shipping);
-    setQuantity(data.quantity);
-    setId(data._id);
-    }catch(err){
-        console.log(err);
+  const loadProduct = async () => {
+    try {
+      const { data } = await axios.get(`/product/${params.slug}`);
+      setName(data.name);
+      setDescription(data.description);
+      setPrice(data.price);
+      setCategory(data.category._id);
+      setShipping(data.shipping);
+      setQuantity(data.quantity);
+      setId(data._id);
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const productData = new FormData();
-      productData.append("photo", photo);
+      photo && productData.append("photo", photo);
       productData.append("name", name);
       productData.append("description", description);
       productData.append("price", price);
@@ -72,16 +72,29 @@ export default function AdminProductUpdate() {
       productData.append("quantity", quantity);
 
       // console.log([...productData]);
-      const { data } = await axios.post("/product", productData);
+      const { data } = await axios.put(`/product/${id}`, productData);
       if (data?.error) {
         toast.error(data.error);
       } else {
-        toast.success(`${data.name} is created`);
-        navigate("dashboard/admin/products");
+        toast.success(`${data.name} is updated`);
+        navigate("/dashboard/admin/products");
       }
     } catch (err) {
       console.log(err);
-      toast.error("Product create failed.try again!!!");
+      toast.error("Product update failed.try again!!!");
+    }
+  };
+
+  const handleDelete = async (req, res) => {
+    try {
+      let answer = window.confirm("Are you sure you want  to delete this product");
+      if(!answer) return;
+      const { data } = await axios.delete(`/product/${id}`);
+      toast.success(`"${data.name}" is deleted`);
+      navigate("dashboard/admin/products");
+    } catch (err) {
+      console.log(err);
+      toast.error("Delete failed. Try again");
     }
   };
 
@@ -99,10 +112,21 @@ export default function AdminProductUpdate() {
           <div className="col-md-9">
             <div className="p-3 mt-2 mb-2 h4 bg-light">Update Product </div>
 
-            {photo && (
+            {photo ? (
               <div className="text-center">
                 <img
                   src={URL.createObjectURL(photo)}
+                  alt="product photo"
+                  className="img img-responsive"
+                  height="200px"
+                />
+              </div>
+            ) : (
+              <div className="text-center">
+                <img
+                  src={`${
+                    process.env.REACT_APP_API
+                  }/product/photo/${id}?${new Date().getTime()}`}
                   alt="product photo"
                   className="img img-responsive"
                   height="200px"
@@ -169,9 +193,11 @@ export default function AdminProductUpdate() {
               className="form-select mb-3"
               placeholder="choose shipping"
               onChange={(value) => setShipping(value)}
+              value={shipping ? "YES" : "NO"}
             >
+             <Option value="1">YES</Option>
               <Option value="0">NO</Option>
-              <Option value="1">YES</Option>
+
             </Select>
 
             <input
@@ -183,9 +209,14 @@ export default function AdminProductUpdate() {
               onChange={(e) => setQuantity(e.target.value)}
             />
 
-            <button onClick={handleSubmit} className="btn btn-primary mb-5">
-              Submit
-            </button>
+            <div className="d-flex justify-content-between">
+              <button onClick={handleSubmit} className="btn btn-primary mb-5">
+                Update
+              </button>
+              <button onClick={handleDelete} className="btn btn-danger mb-5">
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>

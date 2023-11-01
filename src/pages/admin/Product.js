@@ -55,8 +55,10 @@ export default function AdminProduct() {
      if(data?.error){
       toast.error(data.error)
      }else{
-      toast.success(`${data.name} is created`);
-     navigate('dashboard/admin/products');
+      toast.success(`"${data.name}" is created`);
+      console.log("Before navigation"); // Add this log
+      navigate('/dashboard/admin/products');
+     console.log("After navigation"); // Add this log
      }
     } catch (err) {
       console.log(err);
@@ -148,9 +150,11 @@ export default function AdminProduct() {
               className="form-select mb-3"
               placeholder="choose shipping"
               onChange={(value) => setShipping(value)}
+              value={shipping ? "YES": "NO"}
             >
+            <Option value="1">YES</Option>
               <Option value="0">NO</Option>
-              <Option value="1">YES</Option>
+              
             </Select>
 
             <input
