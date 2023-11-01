@@ -1,8 +1,8 @@
 export default function Jumbotron({title,subTitle = "Welcome to React E-commerce"}){
     return(
-        <div className="container-fluid bg-primary">
+        <div className="container-fluid jumbotron ">
             <div className="row">
-                <div className="col text-center p-4 bg-light">
+                <div className="col text-center p-4 ">
                     <h1>{title}</h1>
                     <p className="lead">{subTitle}</p>
                 </div>
