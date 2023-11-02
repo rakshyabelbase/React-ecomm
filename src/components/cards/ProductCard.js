@@ -25,9 +25,9 @@ export default function ProductCard({ p }) {
         <h5>{p?.name}</h5>
 
           <h4 className="fw-bold">
-            {p?.price?.toLocaleString("NPR",{
+            {p?.price?.toLocaleString("en-US",{
                 style: 'currency',
-                currency:"NPR",
+                currency:"USD",
                 currencyDisplay: 'symbol'
             })}
           </h4>
