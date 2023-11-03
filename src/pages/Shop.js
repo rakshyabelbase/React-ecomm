@@ -12,26 +12,26 @@ export default function Shop() {
   const [radio, setRadio] = useState([]);
 
   useEffect(() => {
-    if(!checked.length || !radio.length) loadProducts();
+    if (!checked.length || !radio.length) loadProducts();
     loadCategories();
   }, []);
 
-  useEffect(()=>{
-    if(checked.length || radio.length) loadFilteredProducts();
-  },[checked,radio])
+  useEffect(() => {
+    if (checked.length || radio.length) loadFilteredProducts();
+  }, [checked, radio]);
 
-  
-
-
-  const loadFilteredProducts = async()=>{
-    try{
-      const {data} = await axios.post('filtered-products', {checked,radio});
-      console.log('filtered products =>',data);
+  const loadFilteredProducts = async () => {
+    try {
+      const { data } = await axios.post("filtered-products", {
+        checked,
+        radio,
+      });
+      console.log("filtered products =>", data);
       setProducts(data);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const loadProducts = async () => {
     try {
@@ -41,7 +41,6 @@ export default function Shop() {
       console.log(err);
     }
   };
-  
 
   const loadCategories = async () => {
     try {
@@ -75,7 +74,9 @@ export default function Shop() {
             <div className="row p-5">
               {categories?.map((c) => (
                 <div className="col-md-12" key={c._id}>
-                  <Checkbox onChange={(e) => handleCheck(e.target.checked, c._id)}>
+                  <Checkbox
+                    onChange={(e) => handleCheck(e.target.checked, c._id)}
+                  >
                     {c.name}
                   </Checkbox>
                 </div>
@@ -87,27 +88,36 @@ export default function Shop() {
             </h2>
             <div className="row p-5">
               <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-                {prices?.map((p) => ( // Added the return statement here
-                  <div key={p._id} style={{ marginLeft: "8px" }}>
-                    <Radio value={p.array}>
-                      {p.name}
-                    </Radio>
-                  </div>
-                ))}
+                {prices?.map(
+                  (
+                    p // Added the return statement here
+                  ) => (
+                    <div key={p._id} style={{ marginLeft: "8px" }}>
+                      <Radio value={p.array}>{p.name}</Radio>
+                    </div>
+                  )
+                )}
               </Radio.Group>
             </div>
 
-                  <div className="p-5 pt-0 ">
-                    <button className="btn btn-outline-secondary col-12" onClick = {() => window.location.reload()}>Reset</button>
-                  </div>
-
+            <div className="p-5 pt-0 ">
+              <button
+                className="btn btn-outline-secondary col-12"
+                onClick={() => window.location.reload()}
+              >
+                Reset
+              </button>
+            </div>
           </div>
 
           <div className="col-md-9">
             <h2 className="p-3 mt-2 h4 bg-light text-center">
               {products?.length} Products
             </h2>
-            <div className="row" style ={{height: '100vh',overflow:'scroll'}}>
+            <div
+              className="row"
+              style={{ height: "100vh", overflow: "scroll" }}
+            >
               {products?.map((p) => (
                 <div className="col-md-4" key={p._id}>
                   <ProductCard p={p} />
