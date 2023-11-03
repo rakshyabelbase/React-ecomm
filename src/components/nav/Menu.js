@@ -1,6 +1,7 @@
 import { Navigate, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { useNavigate } from "react-router-dom";
+import Search from "../forms/Search";
 
 export default function Menu() {
   //hooks
@@ -27,6 +28,7 @@ export default function Menu() {
             SHOP
           </NavLink>
         </li>
+        <Search/>
 
         {!auth?.user ? (
           <>
@@ -44,27 +46,30 @@ export default function Menu() {
         ) : (
           <div className="dropdown">
             <li>
-              <a className="nav-link pointer dropdown-toggle" data-bs-toggle="dropdown" >
+              <a
+                className="nav-link pointer dropdown-toggle"
+                data-bs-toggle="dropdown"
+              >
                 {auth?.user?.name}{" "}
               </a>{" "}
-
-
               <ul className="dropdown-menu">
-              <li>
-                <NavLink className="nav-link" to={`/dashboard/${auth?.user?.role ===1?'admin':'user'}`}>
-                  Dashboard
-                </NavLink>
-              </li>
-              <li className="nav-item pointer">
-                <a onClick={logout} className="nav-link" to="/logout">
-                  logout
-                </a>
-              </li>
-            </ul>
-
+                <li>
+                  <NavLink
+                    className="nav-link"
+                    to={`/dashboard/${
+                      auth?.user?.role === 1 ? "admin" : "user"
+                    }`}
+                  >
+                    Dashboard
+                  </NavLink>
+                </li>
+                <li className="nav-item pointer">
+                  <a onClick={logout} className="nav-link" to="/logout">
+                    logout
+                  </a>
+                </li>
+              </ul>
             </li>
-
-            
           </div>
         )}
       </ul>
