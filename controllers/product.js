@@ -1,6 +1,8 @@
 import Product from "../models/product.js";
 import fs from "fs";
 import slugify from "slugify";
+import { checkServerIdentity } from "tls";
+import product from "../models/product.js";
 
 export const create = async (req, res) => {
   try {
@@ -110,33 +112,35 @@ export const update = async (req, res) => {
     //validations
     switch (true) {
       case !name.trim():
-        res.json({ error: "Name is required" });
+        return res.json({ error: "Name is required" });
         break;
       case !description.trim():
-        res.json({ error: "Description is required" });
+        return res.json({ error: "Description is required" });
         break;
       case !price.trim():
-        res.json({ error: "Price is required" });
+        return res.json({ error: "Price is required" });
         break;
       case !category.trim():
-        res.json({ error: "Category is required" });
+        return res.json({ error: "Category is required" });
         break;
       case !quantity.trim():
-        res.json({ error: "Quantity is required" });
+        return res.json({ error: "Quantity is required" });
         break;
       case !shipping.trim():
-        res.json({ error: "Shipping is required" });
+        return res.json({ error: "Shipping is required" });
         break;
       case photo && photo.size > 1000000:
-        res.json({ error: "image should be less than 1 mb size" });
+        return res.json({ error: "image should be less than 1 mb size" });
         break;
     }
     ///update product
-    const product = await Product.findByIdAndUpdate(req.params.productId,{
-      ...req.fields,
-      slug: slugify(name),
-    },
-    {new:true}
+    const product = await Product.findByIdAndUpdate(
+      req.params.productId,
+      {
+        ...req.fields,
+        slug: slugify(name),
+      },
+      { new: true }
     );
 
     if (photo) {
@@ -151,3 +155,48 @@ export const update = async (req, res) => {
     return res.status(400).json(err.message);
   }
 };
+export const filteredProducts = async (req, res) => {
+  try {
+    const { checked, radio } = req.body;
+    let args = {};
+    if (checked.length > 0) args.category = checked;
+    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+    console.log("args =>", args);
+
+    const products = await product.find(args)
+      /* categories: ["fcgvb", "fghhj"],
+      price: { $gte: radio[0], $lte: radio[1] }, */
+      console.log("products found in filtered products query =>", products.length)
+      res.json(products);
+    
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const productsCount = async (req, res) =>{
+  try{
+    const total = await Product.find({}).estimatedDocumentCount()
+    res.json(total);
+  }catch(err){
+    console.log(err);
+  }
+
+};
+export const listProducts = async (req, res) =>{
+  try{
+    const perPage = 2;
+    const page = req.params.page ? req.params.page :1;
+
+    const products = await Product.find({})
+    .skip((page-1)* perPage)
+    .limit(2)
+    .select("-photos")
+    .sort({createdAt:-1});
+
+    res.json(products);
+  }catch (err){
+    console.log(err);
+  }
+};
+
