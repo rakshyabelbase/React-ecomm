@@ -200,3 +200,18 @@ export const listProducts = async (req, res) =>{
   }
 };
 
+export const productSearch = async (req,res) =>{
+  try{
+    const {keyword} = req.params;
+    const results = await Product.find({
+      $or: [
+        { name: {$regex: keyword, $options:"i"}},
+         {description: {$regex: keyword, $options:"i"}},
+      ],
+    }).select("-photo");
+    res.json(results);
+  }catch(err){
+    console.log(err);
+  }
+}
+
