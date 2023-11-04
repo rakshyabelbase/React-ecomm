@@ -17,7 +17,8 @@ import {
   filteredProducts,
   productsCount,
   listProducts,
-  productSearch
+  productSearch,
+  relatedProducts
 } from "../controllers/product.js";
 
 router.post("/product", requireSignin, isAdmin, formidable(), create);
@@ -30,5 +31,6 @@ router.post("/filtered-products", filteredProducts);
 router.get("/products-count", productsCount);
 router.get("/list-products/:page", listProducts);
 router.get('/products/search/:keyword',productSearch)
+router.get('/related-products/:productId/:categoryId',relatedProducts)
 
 export default router;
