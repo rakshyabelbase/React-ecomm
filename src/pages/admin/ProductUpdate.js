@@ -178,6 +178,8 @@ export default function AdminProductUpdate() {
               className="form-select mb-3"
               placeholder="choose category"
               onChange={(value) => setCategory(value)}
+              value={category}
+
             >
               {categories?.map((c) => (
                 <Option key={c._id} value={c._id}>
