@@ -1,6 +1,7 @@
 import Category from "../models/category.js";
 import slugify from "slugify";
 import category from "../models/category.js";
+import product from "../models/product.js";
 
 export const create = async (req, res) => {
   try {
@@ -69,3 +70,16 @@ export const read = async (req, res) => {
     return res.status(400).json(err);
   }
 };
+export const productByCtaegory = async(req,res)=>{
+      try{
+        const category = await Category.findOne({slug: req.params.slug});
+        const products = await product.find({category}).populate('category');
+
+        res.json({
+          category,
+          products,
+        })
+      }catch(err){
+        console.log(err);
+      }
+}

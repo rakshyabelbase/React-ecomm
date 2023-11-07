@@ -185,12 +185,12 @@ export const productsCount = async (req, res) =>{
 };
 export const listProducts = async (req, res) =>{
   try{
-    const perPage = 2;
+    const perPage = 4;
     const page = req.params.page ? req.params.page :1;
 
     const products = await Product.find({})
     .skip((page-1)* perPage)
-    .limit(2)
+    .limit(4)
     .select("-photos")
     .sort({createdAt:-1});
 
