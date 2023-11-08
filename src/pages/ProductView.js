@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Jumbotron from "../components/cards/Jumbotron";
 import { Badge } from "antd";
 import moment from "moment";
+import { toast } from "react-hot-toast";
+import { useCart } from "../context/cart";
 import {
   FaDollarSign,
   FaProjectDiagram,
@@ -17,6 +19,10 @@ import ProductCard from "../components/cards/ProductCard";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 export default function ProductView() {
+  //context
+  const [cart,setCart] = useCart();
+  
+  //state
   const [product, setProduct] = useState({});
   const [related, setRelated] = useState([]);
 
@@ -30,19 +36,21 @@ export default function ProductView() {
     try {
       const { data } = await axios.get(`/product/${params.slug}`);
       setProduct(data);
-      loadRelated(data._id,data.category._id);
+      loadRelated(data._id, data.category._id);
     } catch (err) {
       console.log(err);
     }
   };
-  const loadRelated = async(productId, categoryId) =>{
-    try{
-        const {data} = await axios.get(`/related-products/${productId}/${categoryId}`);
-        setRelated(data);
-    }catch(err){
-        console.log(err)
+  const loadRelated = async (productId, categoryId) => {
+    try {
+      const { data } = await axios.get(
+        `/related-products/${productId}/${categoryId}`
+      );
+      setRelated(data);
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
   return (
     <div className="container-fluid">
       <div className="row">
@@ -103,7 +111,14 @@ export default function ProductView() {
 
             <button
               className="btn btn-outline-primary col card-button"
-              style={{ borderBottomRightRadius: "5px" }}
+              style={{ 
+                borderBottomRightRadius: "5px" ,
+                borderBottomLeftRadius: "5px",
+                }}
+              onClick={() => {
+                setCart([...cart, product]);
+                toast.success("Added to cart");
+              }}
             >
               Add to Cart
             </button>
@@ -111,9 +126,9 @@ export default function ProductView() {
         </div>
         <div className="col-md-3">
           <h2>Related Products</h2>
-          {related.length <1 && <p>Nothing Found</p>}
-          {related?.map((p) =>(
-            <ProductCard p= {p} key = {p._id}/>
+          {related.length < 1 && <p>Nothing Found</p>}
+          {related?.map((p) => (
+            <ProductCard p={p} key={p._id} />
           ))}
         </div>
       </div>
