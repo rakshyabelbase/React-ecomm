@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import AdminMenu from "../../components/nav/AdminMenu";
 import { useAuth } from "../../context/auth";
 import Jumbotron from "../../components/cards/Jumbotron";
+import AdminMenu from "../../components/nav/AdminMenu";
 import axios from "axios";
 import { Select } from "antd";
 import toast from "react-hot-toast";
@@ -10,9 +10,9 @@ import { useNavigate, useParams } from "react-router-dom";
 const { Option } = Select;
 
 export default function AdminProductUpdate() {
-  //context
+  // context
   const [auth, setAuth] = useAuth();
-  //State
+  // state
   const [categories, setCategories] = useState([]);
   const [photo, setPhoto] = useState("");
   const [name, setName] = useState("");
@@ -22,8 +22,7 @@ export default function AdminProductUpdate() {
   const [shipping, setShipping] = useState("");
   const [quantity, setQuantity] = useState("");
   const [id, setId] = useState("");
-
-  //hook
+  // hook
   const navigate = useNavigate();
   const params = useParams();
 
@@ -71,30 +70,31 @@ export default function AdminProductUpdate() {
       productData.append("shipping", shipping);
       productData.append("quantity", quantity);
 
-      // console.log([...productData]);
       const { data } = await axios.put(`/product/${id}`, productData);
       if (data?.error) {
         toast.error(data.error);
       } else {
-        toast.success(`${data.name} is updated`);
+        toast.success(`"${data.name}" is updated`);
         navigate("/dashboard/admin/products");
       }
     } catch (err) {
       console.log(err);
-      toast.error("Product update failed.try again!!!");
+      toast.error("Product create failed. Try again.");
     }
   };
 
   const handleDelete = async (req, res) => {
     try {
-      let answer = window.confirm("Are you sure you want  to delete this product");
-      if(!answer) return;
+      let answer = window.confirm(
+        "Are you sure you want to delete this product?"
+      );
+      if (!answer) return;
       const { data } = await axios.delete(`/product/${id}`);
       toast.success(`"${data.name}" is deleted`);
-      navigate("dashboard/admin/products");
+      navigate("/dashboard/admin/products");
     } catch (err) {
       console.log(err);
-      toast.error("Delete failed. Try again");
+      toast.error("Delete failed. Try again.");
     }
   };
 
@@ -104,13 +104,14 @@ export default function AdminProductUpdate() {
         title={`Hello ${auth?.user?.name}`}
         subTitle="Admin Dashboard"
       />
+
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3">
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <div className="p-3 mt-2 mb-2 h4 bg-light">Update Product </div>
+            <div className="p-3 mt-2 mb-2 h4 bg-light">Update Product</div>
 
             {photo ? (
               <div className="text-center">
@@ -135,8 +136,8 @@ export default function AdminProductUpdate() {
             )}
 
             <div className="pt-2">
-              <label className="btn btn-outline-secondary  col-12 mb-3">
-                {photo ? photo.name : "Upload Photo"}
+              <label className="btn btn-outline-secondary col-12 mb-3">
+                {photo ? photo.name : "Upload photo"}
                 <input
                   type="file"
                   name="photo"
@@ -148,42 +149,40 @@ export default function AdminProductUpdate() {
             </div>
 
             <input
-              type="number"
-              className="form-control p-2  mb-3"
-              placeholder="Enter Price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
+              type="text"
+              className="form-control p-2 mb-3"
+              placeholder="Write a name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
 
             <textarea
               type="text"
-              className="form-control p-2  mb-3"
+              className="form-control p-2 mb-3"
               placeholder="Write a description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
 
             <input
-              type="text"
-              className="form-control p-2  mb-3"
-              placeholder="Write a name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="number"
+              className="form-control p-2 mb-3"
+              placeholder="Enter price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
             />
 
             <Select
-              //showSearch
+              // showSearch
               bordered={false}
               size="large"
               className="form-select mb-3"
-              placeholder="choose category"
+              placeholder="Choose category"
               onChange={(value) => setCategory(value)}
               value={category}
-
             >
               {categories?.map((c) => (
                 <Option key={c._id} value={c._id}>
-                  {" "}
                   {c.name}
                 </Option>
               ))}
@@ -193,20 +192,19 @@ export default function AdminProductUpdate() {
               bordered={false}
               size="large"
               className="form-select mb-3"
-              placeholder="choose shipping"
+              placeholder="Choose shipping"
               onChange={(value) => setShipping(value)}
-              value={shipping ? "YES" : "NO"}
+              value={shipping ? "Yes" : "No"}
             >
-             <Option value="1">YES</Option>
-              <Option value="0">NO</Option>
-
+              <Option value="0">No</Option>
+              <Option value="1">Yes</Option>
             </Select>
 
             <input
               type="number"
               min="1"
-              className="form-control p-2  mb-3"
-              placeholder="Enter a quantity"
+              className="form-control p-2 mb-3"
+              placeholder="Enter quantity"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
             />

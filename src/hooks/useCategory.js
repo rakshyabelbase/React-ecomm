@@ -5,8 +5,8 @@ export default function useCategory (){
     const [categories, setCategories] = useState([]);
 
     useEffect(() =>{
-        loadCategories()
-    }, [])
+        loadCategories();
+    }, []);
 
     const loadCategories = async ()=>{
         try{

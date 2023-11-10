@@ -7,15 +7,14 @@ import { useCart } from "../../context/cart";
 import { Badge } from "antd";
 
 export default function Menu() {
-  //context
+  // context
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
-
-  //hooks
+  // hooks
   const categories = useCategory();
   const navigate = useNavigate();
 
-  console.log("categories in menu =>", categories);
+  // console.log("categories in menu => ", categories);
 
   const logout = () => {
     setAuth({ ...auth, user: null, token: "" });
@@ -27,13 +26,13 @@ export default function Menu() {
     <>
       <ul className="nav d-flex justify-content-between shadow-sm mb-2 sticky-top bg-light">
         <li className="nav-item">
-          <NavLink className="nav-link " aria-current="page" to="/">
+          <NavLink className="nav-link" aria-current="page" to="/">
             HOME
           </NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink className="nav-link " aria-current="page" to="/shop">
+          <NavLink className="nav-link" aria-current="page" to="/shop">
             SHOP
           </NavLink>
         </li>
@@ -45,18 +44,20 @@ export default function Menu() {
               data-bs-toggle="dropdown"
             >
               CATEGORIES
-            </a>{" "}
+            </a>
+
             <ul
               className="dropdown-menu"
               style={{ height: "300px", overflow: "scroll" }}
             >
               <li>
                 <NavLink className="nav-link" to="/categories">
-                  All categories
+                  All Categories
                 </NavLink>
               </li>
+
               {categories?.map((c) => (
-                <li>
+                <li key={c._id}>
                   <NavLink className="nav-link" to={`/category/${c.slug}`}>
                     {c.name}
                   </NavLink>
@@ -65,17 +66,19 @@ export default function Menu() {
             </ul>
           </li>
         </div>
+
         <li className="nav-item mt-1">
           <Badge
             count={cart?.length >= 1 ? cart.length : 0}
             offset={[-5, 11]}
             showZero={true}
           >
-            <NavLink className="nav-link " aria-current="page" to="/cart">
+            <NavLink className="nav-link" aria-current="page" to="/cart">
               CART
             </NavLink>
           </Badge>
         </li>
+
         <Search />
 
         {!auth?.user ? (
@@ -98,8 +101,9 @@ export default function Menu() {
                 className="nav-link pointer dropdown-toggle"
                 data-bs-toggle="dropdown"
               >
-                {auth?.user?.name?.toUpperCase()}{" "}
-              </a>{" "}
+                {auth?.user?.name?.toUpperCase()}
+              </a>
+
               <ul className="dropdown-menu">
                 <li>
                   <NavLink
@@ -111,9 +115,10 @@ export default function Menu() {
                     Dashboard
                   </NavLink>
                 </li>
+
                 <li className="nav-item pointer">
-                  <a onClick={logout} className="nav-link" to="/logout">
-                    logout
+                  <a onClick={logout} className="nav-link">
+                    Logout
                   </a>
                 </li>
               </ul>

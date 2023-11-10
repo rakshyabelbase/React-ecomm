@@ -1,29 +1,32 @@
-.active{
+.active {
   text-decoration: underline !important;
-  text-decoration-thickness:5px !important;
+  text-decoration-thickness: 5px !important;
 }
-.pointer{
+
+.pointer {
   cursor: pointer;
 }
 
-.card-button{
+.card-button {
   border-radius: 0px;
 }
 
-.hoverable:hover{
+.hoverable:hover {
   border-right: 5px solid #0d6efd;
   border-bottom: 5px solid #0d6efd;
   border-radius: 12px;
 }
-.ant-checkbox-wrapper:first-of-type{
-  margin-left: 8px;
 
+.ant-checkbox-wrapper:first-of-type {
+  margin-left: 8px;
 }
-.form-control{
-  -webkit-box-shadow: noone !important;
+
+.form-control {
+  -webkit-box-shadow: none !important;
   outline: -webkit-focus-ring-color auto 0px !important;
 }
-/* jumbotron color animation css */
+
+/* jumbotron animation color css */
 .jumbotron {
   width: 30wh;
   height: 30vh;
