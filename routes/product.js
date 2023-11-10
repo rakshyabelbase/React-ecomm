@@ -3,10 +3,9 @@ import formidable from "express-formidable";
 
 const router = express.Router();
 
-//Middlewares
+// middlewares
 import { requireSignin, isAdmin } from "../middlewares/auth.js";
-
-//controllers
+// controllers
 import {
   create,
   list,
@@ -17,8 +16,8 @@ import {
   filteredProducts,
   productsCount,
   listProducts,
-  productSearch,
-  relatedProducts
+  productsSearch,
+  relatedProducts,
 } from "../controllers/product.js";
 
 router.post("/product", requireSignin, isAdmin, formidable(), create);
@@ -30,7 +29,10 @@ router.put("/product/:productId", requireSignin, isAdmin, formidable(), update);
 router.post("/filtered-products", filteredProducts);
 router.get("/products-count", productsCount);
 router.get("/list-products/:page", listProducts);
-router.get('/products/search/:keyword',productSearch);
-router.get('/related-products/:productId/:categoryId',relatedProducts);
+router.get("/products/search/:keyword", productsSearch);
+router.get("/related-products/:productId/:categoryId", relatedProducts);
+
+
+//router.put("/order-status/:orderId", requireSignin, isAdmin, orderStatus);
 
 export default router;
